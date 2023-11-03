@@ -42,9 +42,10 @@ public class DealershipFileManager {
         bufferedReader.close();
     }
 
-    public void saveDealership()throws IOException{
+    public void saveDealership(int vin,int year,String make,String model,String type, String color, int milage, double price)throws IOException{
         FileWriter fileWriter = new FileWriter("src/main/resources/inventory.csv", true);
         BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
-
+        bufferedWriter.write("\n"+vin + "|"+ year + "|"+ make + "|"+ model + "|"+ type + "|" + color + "|" + milage + "|" + price);
+        bufferedWriter.close();
     }
 }
