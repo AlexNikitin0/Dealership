@@ -71,5 +71,5 @@ public class Dealership {
     public ArrayList getVehiclesByType(String vehicleType){
         return null;
     }
-    
+
 }
