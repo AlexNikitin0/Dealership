@@ -1,3 +1,5 @@
+package com.pluralsight;
+
 public class Vehicle {
     //prop
     private int vin;
