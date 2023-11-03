@@ -61,6 +61,7 @@ public class UserInterface {
                 break;
             case 7:
                 processGetAllVehiclesRequest();
+
                 break;
             case 8:
                 processAddVehicleRequest();
@@ -105,10 +106,10 @@ public class UserInterface {
     }
 
     private void displayVehicles(){
-        for(Vehicle car :DealershipFileManager.vehicles){
-            System.out.printf("vin: %d Year: %d Make: %s Model: %s Type: %s Color: %s Milage: %d Price: %.2f",car.getVin(),car.getYear(),car.getMake(),car.getModel(),car.getVehicleType(),car.getColor(),car.getOdometer(),car.getPrice());
+        for(Vehicle car :DealershipFileManager.dealership.getAllVehicles()){
+            System.out.printf(" vin: %d  Year: %d  Make: %s  Model: %s  Type: %s  Color: %s  Milage: %d  Price: %.2f ",car.getVin(),car.getYear(),car.getMake(),car.getModel(),car.getVehicleType(),car.getColor(),car.getOdometer(),car.getPrice());
         }
-        System.out.println(DealershipFileManager.vehicles.toString());
+
     }
 
 

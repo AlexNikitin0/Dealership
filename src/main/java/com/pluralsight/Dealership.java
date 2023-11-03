@@ -43,11 +43,8 @@ public class Dealership {
         inventory.add(car);
     }
 
-    public void getAllVehicles() {
-        Vehicle cars;
-        for (Vehicle car : inventory) {
-            System.out.println(car);
-        }
+    public ArrayList<Vehicle> getAllVehicles() {
+        return this.inventory;
 
     }
 

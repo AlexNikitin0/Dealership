@@ -15,6 +15,7 @@ public class DealershipFileManager {
         BufferedReader bufferedReader = new BufferedReader(fileReader);
         String input;
 
+
         while ((input = bufferedReader.readLine()) != null){
             String[] line = input.split("\\|");
             //read first line to get dealership info
@@ -28,8 +29,7 @@ public class DealershipFileManager {
                 int odometer = Integer.parseInt(line[6]);
                 double price = Double.parseDouble(line[7]);
                 Vehicle vehicle = new Vehicle(vinNumber,year,make,model,vehicleType,vehicleColor,odometer,price);
-                dealership.addVehicle(vehicle);
-
+                 dealership.addVehicle(vehicle);
                 }
             else {
                 String dealershipName = line[0];
@@ -37,7 +37,9 @@ public class DealershipFileManager {
                 String dealershipPhone = line[2];
                 dealership = new Dealership(dealershipName,dealershipAddress,dealershipPhone);
             }
+
         }
+        bufferedReader.close();
     }
 
     public void saveDealership()throws IOException{
