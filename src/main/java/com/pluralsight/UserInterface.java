@@ -4,17 +4,22 @@ import com.pluralsight.Dealership;
 import com.pluralsight.DealershipFileManager;
 
 import java.io.IOException;
+import java.sql.SQLOutput;
+import java.time.LocalDate;
 import java.util.*;
 
 
 public class UserInterface {
+
+    public static ArrayList<Contract> contracts = new ArrayList<>();
     Scanner keyboard = new Scanner(System.in);
     
     private void init() throws IOException {
 
             DealershipFileManager fileManager = new DealershipFileManager();
             fileManager.getDealership();
-
+            ContractFileManager contractFileManager = new ContractFileManager();
+            contractFileManager.saveContract(contracts);
 
 
 
@@ -37,7 +42,9 @@ public class UserInterface {
         System.out.println("7)List all vehicles: ");
         System.out.println("8)Trade in a vehicle(Add): ");
         System.out.println("9)Send vehicle to auction(Remove): ");
-        System.out.println("10)QUIT");
+        System.out.println("10)Buy a car: ");
+        System.out.println("11)Lease a car: ");
+        System.out.println("12)QUIT");
         choice = keyboard.nextInt();
         keyboard.nextLine();
         
@@ -81,6 +88,12 @@ public class UserInterface {
                 display();
                 break;
             case 10:
+                processBuyVehicleRequest();//make method
+                break;
+            case 11:
+                processLeaseVehicleRequest();//make method
+                break;
+            case 12:
                 System.exit(0);
             default:
                 System.out.printf("Invalid input");
@@ -204,6 +217,65 @@ public class UserInterface {
         }
         display();
 
+    }
+
+    private void showList()throws IOException{
+        ArrayList<Vehicle> test = DealershipFileManager.dealership.getAllVehicles();
+
+        for(Vehicle car :test){
+            System.out.println();
+            System.out.printf(" vin: %d  Year: %d  Make: %s  Model: %s  Type: %s  Color: %s  Milage: %d  Price: %.2f ",car.getVin(),car.getYear(),car.getMake(),car.getModel(),car.getVehicleType(),car.getColor(),car.getOdometer(),car.getPrice());
+            System.out.println();
+        }
+
+
+    }
+
+    private void processBuyVehicleRequest ()throws IOException{
+        int choice;
+        boolean isFinance;
+        System.out.println("Are you financing? ");
+        System.out.println("Yes(1)");
+        System.out.println("No(2)");
+        choice = keyboard.nextInt();
+        keyboard.nextLine();
+        if(choice == 1){
+            isFinance = true;
+        }
+        else {
+            isFinance = false;
+        }
+        LocalDate date =  LocalDate.now();
+        System.out.println("What is your first and last name: ");
+        String name = keyboard.nextLine();
+        System.out.println("What is your email: ");
+
+        String email = keyboard.nextLine();
+        System.out.println("Please enter the VIN number of the vehicle of interest: ");
+        showList();
+        int VIN = keyboard.nextInt();
+        keyboard.nextLine();
+        //init new salesContract
+        SalesContract salesContract = new SalesContract(date.toString(),name,email,DealershipFileManager.dealership.getVehicleByVin(VIN).get(0),isFinance);
+        contracts.add(salesContract);
+        init();
+    }
+
+    private void  processLeaseVehicleRequest()throws IOException{
+        LocalDate date =  LocalDate.now();
+        System.out.println("What is your first and last name: ");
+        String name = keyboard.nextLine();
+        System.out.println("What is your email: ");
+        String email = keyboard.nextLine();
+        System.out.println("Please enter the VIN number of the vehicle of interest: ");
+        showList();
+        int VIN = keyboard.nextInt();
+        //init new LeaseContract
+        LeaseContract leaseContract = new LeaseContract(date.toString(),name,email,DealershipFileManager.dealership.getVehicleByVin(VIN).get(0));
+        contracts.add(leaseContract);
+
+
+        init();
     }
 
 

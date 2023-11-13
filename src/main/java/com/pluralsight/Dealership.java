@@ -58,6 +58,17 @@ public class Dealership {
         }
     }
 
+    public ArrayList<Vehicle> getVehicleByVin(int vin){
+        ArrayList<Vehicle> cars;
+        cars = new ArrayList<>();
+        for(Vehicle car : inventory){
+            if(car.getVin() == vin){
+                 cars.add(car);
+            }
+        }
+        return cars;
+    }
+
     public ArrayList<Vehicle> getVehiclesByPrice(double min, double max){
         ArrayList<Vehicle> cars;
         cars = new ArrayList<>();
