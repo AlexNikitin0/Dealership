@@ -48,21 +48,21 @@ public class Dealership {
 
     }
 
-    public void removeVehicle(int vin){
+    public void removeVehicle(String vin){
 
 
         for(Vehicle car : inventory){
-            if(car.getVin() == vin){
+            if(car.getVin().equalsIgnoreCase(vin)){
                 inventory.remove(inventory.indexOf(car));
             }
         }
     }
 
-    public ArrayList<Vehicle> getVehicleByVin(int vin){
+    public ArrayList<Vehicle> getVehicleByVin(String vin){
         ArrayList<Vehicle> cars;
         cars = new ArrayList<>();
         for(Vehicle car : inventory){
-            if(car.getVin() == vin){
+            if(car.getVin().equalsIgnoreCase(vin)){
                  cars.add(car);
             }
         }

@@ -1,8 +1,13 @@
 package com.pluralsight;
 
 import com.pluralsight.Dealership;
-import com.pluralsight.DealershipFileManager;
 
+import org.apache.commons.dbcp2.BasicDataSource;
+
+
+
+import javax.sql.DataSource;
+import javax.sql.DataSource;
 import java.io.IOException;
 import java.sql.SQLOutput;
 import java.time.LocalDate;
@@ -11,16 +16,19 @@ import java.util.*;
 
 public class UserInterface {
 
+  public static DataManager dataManager;
+
     public static ArrayList<Contract> contracts = new ArrayList<>();
     Scanner keyboard = new Scanner(System.in);
     
     private void init() throws IOException {
 
-            DealershipFileManager fileManager = new DealershipFileManager();
-            fileManager.getDealership();
-            ContractFileManager contractFileManager = new ContractFileManager();
-            contractFileManager.saveContract(contracts);
 
+        BasicDataSource dataSource = new BasicDataSource();
+        dataSource.setUrl("jdbc:mysql://localhost:3306/cardealership");
+        dataSource.setUsername(System.getenv("MY_DB_USERNAME"));
+        dataSource.setPassword(System.getenv("MY_DB_PASSWORD"));
+         dataManager = new DataManager(dataSource);
 
 
     }
@@ -127,8 +135,8 @@ public class UserInterface {
         System.out.println("Enter the price ");
         double price = keyboard.nextDouble();
         keyboard.nextLine();
-        DealershipFileManager fileManager = new DealershipFileManager();
-        fileManager.saveDealership(vin,year,make,model,type,color,milage,price);
+        //DealershipFileManager fileManager = new DealershipFileManager();
+      //  fileManager.saveDealership(vin,year,make,model,type,color,milage,price);
         System.out.println("Vehicle added!");
         display();
     }
@@ -140,9 +148,9 @@ public class UserInterface {
     private void processGetByVehicleType() {
         System.out.println("Enter the vehicle type: ");
         String type = keyboard.nextLine();
-       ArrayList<Vehicle> vehiclesByType = DealershipFileManager.dealership.getVehiclesByType(type);
+       ArrayList<Vehicle> vehiclesByType = dataManager.getVehiclesByType(type);
        for(Vehicle car: vehiclesByType){
-           System.out.printf(" vin: %d  Year: %d  Make: %s  Model: %s  Type: %s  Color: %s  Milage: %d  Price: %.2f \n",car.getVin(),car.getYear(),car.getMake(),car.getModel(),car.getVehicleType(),car.getColor(),car.getOdometer(),car.getPrice());
+           System.out.printf(" vin: %s  Year: %d  Make: %s  Model: %s  Type: %s  Color: %s  Milage: %d  Price: %.2f \n",car.getVin(),car.getYear(),car.getMake(),car.getModel(),car.getVehicleType(),car.getColor(),car.getOdometer(),car.getPrice());
 
        }
     }
@@ -154,9 +162,9 @@ public class UserInterface {
         System.out.println("Enter the maximum milage: ");
         int maxMiles = keyboard.nextInt();
         keyboard.nextLine();
-        ArrayList<Vehicle> vehiclesByType = DealershipFileManager.dealership.getVehiclesByMilage(minMiles,maxMiles);
+        ArrayList<Vehicle> vehiclesByType = dataManager.getVehiclesByMilage(minMiles,maxMiles);
         for(Vehicle car: vehiclesByType){
-            System.out.printf(" vin: %d  Year: %d  Make: %s  Model: %s  Type: %s  Color: %s  Milage: %d  Price: %.2f \n",car.getVin(),car.getYear(),car.getMake(),car.getModel(),car.getVehicleType(),car.getColor(),car.getOdometer(),car.getPrice());
+            System.out.printf(" vin: %s  Year: %d  Make: %s  Model: %s  Type: %s  Color: %s  Milage: %d  Price: %.2f \n",car.getVin(),car.getYear(),car.getMake(),car.getModel(),car.getVehicleType(),car.getColor(),car.getOdometer(),car.getPrice());
 
         }
     }
@@ -164,9 +172,9 @@ public class UserInterface {
     private void processGetByColorRequest() {
         System.out.print("Enter the vehicle color: ");
         String type = keyboard.nextLine();
-        ArrayList<Vehicle> vehiclesByType = DealershipFileManager.dealership.getVehiclesByColor(type);
+        ArrayList<Vehicle> vehiclesByType = dataManager.getVehiclesByColor(type);
         for(Vehicle car: vehiclesByType){
-            System.out.printf(" vin: %d  Year: %d  Make: %s  Model: %s  Type: %s  Color: %s  Milage: %d  Price: %.2f \n",car.getVin(),car.getYear(),car.getMake(),car.getModel(),car.getVehicleType(),car.getColor(),car.getOdometer(),car.getPrice());
+            System.out.printf(" vin: %s  Year: %d  Make: %s  Model: %s  Type: %s  Color: %s  Milage: %d  Price: %.2f \n",car.getVin(),car.getYear(),car.getMake(),car.getModel(),car.getVehicleType(),car.getColor(),car.getOdometer(),car.getPrice());
 
         }
     }
@@ -176,9 +184,9 @@ public class UserInterface {
         int min = keyboard.nextInt();
         System.out.print("Enter the maximum vehicle Year: ");
         int max = keyboard.nextInt();
-        ArrayList<Vehicle> vehiclesByType = DealershipFileManager.dealership.getVehiclesByYear(min,max);
+        ArrayList<Vehicle> vehiclesByType = dataManager.getVehiclesByYear(min,max);
         for(Vehicle car: vehiclesByType){
-            System.out.printf(" vin: %d  Year: %d  Make: %s  Model: %s  Type: %s  Color: %s  Milage: %d  Price: %.2f \n",car.getVin(),car.getYear(),car.getMake(),car.getModel(),car.getVehicleType(),car.getColor(),car.getOdometer(),car.getPrice());
+            System.out.printf(" vin: %s  Year: %d  Make: %s  Model: %s  Type: %s  Color: %s  Milage: %d  Price: %.2f \n",car.getVin(),car.getYear(),car.getMake(),car.getModel(),car.getVehicleType(),car.getColor(),car.getOdometer(),car.getPrice());
 
         }
     }
@@ -188,9 +196,9 @@ public class UserInterface {
         String make = keyboard.nextLine();
         System.out.print("Enter the model: ");
         String model = keyboard.nextLine();
-        ArrayList<Vehicle> vehiclesByType = DealershipFileManager.dealership.getVehiclesByMakeModel(make,model);
+        ArrayList<Vehicle> vehiclesByType = dataManager.getVehiclesByMakeModel(make,model);
         for(Vehicle car: vehiclesByType){
-            System.out.printf(" vin: %d  Year: %d  Make: %s  Model: %s  Type: %s  Color: %s  Milage: %d  Price: %.2f \n",car.getVin(),car.getYear(),car.getMake(),car.getModel(),car.getVehicleType(),car.getColor(),car.getOdometer(),car.getPrice());
+            System.out.printf(" vin: %s  Year: %d  Make: %s  Model: %s  Type: %s  Color: %s  Milage: %d  Price: %.2f \n",car.getVin(),car.getYear(),car.getMake(),car.getModel(),car.getVehicleType(),car.getColor(),car.getOdometer(),car.getPrice());
 
         }
     }
@@ -200,19 +208,18 @@ public class UserInterface {
         double min = keyboard.nextDouble();
         System.out.print("Enter the maximum price: ");
         double max = keyboard.nextDouble();
-        ArrayList<Vehicle> vehiclesByType = DealershipFileManager.dealership.getVehiclesByPrice(min,max);
+        ArrayList<Vehicle> vehiclesByType = dataManager.getAllVehiclesByPriceRange(min,max);
         for(Vehicle car: vehiclesByType){
-            System.out.printf(" vin: %d  Year: %d  Make: %s  Model: %s  Type: %s  Color: %s  Milage: %d  Price: %.2f \n",car.getVin(),car.getYear(),car.getMake(),car.getModel(),car.getVehicleType(),car.getColor(),car.getOdometer(),car.getPrice());
+            System.out.printf(" vin: %s  Year: %d  Make: %s  Model: %s  Type: %s  Color: %s  Milage: %d  Price: %.2f \n",car.getVin(),car.getYear(),car.getMake(),car.getModel(),car.getVehicleType(),car.getColor(),car.getOdometer(),car.getPrice());
 
         }
     }
 
     private void displayVehicles()throws IOException{
-       ArrayList<Vehicle> test = DealershipFileManager.dealership.getAllVehicles();
-
-        for(Vehicle car :test){
+        ArrayList<Vehicle> cars = dataManager.getAllVehiclesFromDatabase();
+        for(Vehicle car :cars){
             System.out.println();
-            System.out.printf(" vin: %d  Year: %d  Make: %s  Model: %s  Type: %s  Color: %s  Milage: %d  Price: %.2f ",car.getVin(),car.getYear(),car.getMake(),car.getModel(),car.getVehicleType(),car.getColor(),car.getOdometer(),car.getPrice());
+            System.out.printf(" vin: %s  Year: %d  Make: %s  Model: %s  Type: %s  Color: %s  Milage: %d  Price: %.2f ",car.getVin(),car.getYear(),car.getMake(),car.getModel(),car.getVehicleType(),car.getColor(),car.getOdometer(),car.getPrice());
             System.out.println();
         }
         display();
@@ -220,11 +227,11 @@ public class UserInterface {
     }
 
     private void showList()throws IOException{
-        ArrayList<Vehicle> test = DealershipFileManager.dealership.getAllVehicles();
+        ArrayList<Vehicle> test = dataManager.getAllVehiclesFromDatabase();
 
         for(Vehicle car :test){
             System.out.println();
-            System.out.printf(" vin: %d  Year: %d  Make: %s  Model: %s  Type: %s  Color: %s  Milage: %d  Price: %.2f ",car.getVin(),car.getYear(),car.getMake(),car.getModel(),car.getVehicleType(),car.getColor(),car.getOdometer(),car.getPrice());
+            System.out.printf(" vin: %s  Year: %d  Make: %s  Model: %s  Type: %s  Color: %s  Milage: %d  Price: %.2f ",car.getVin(),car.getYear(),car.getMake(),car.getModel(),car.getVehicleType(),car.getColor(),car.getOdometer(),car.getPrice());
             System.out.println();
         }
 
@@ -253,11 +260,10 @@ public class UserInterface {
         String email = keyboard.nextLine();
         System.out.println("Please enter the VIN number of the vehicle of interest: ");
         showList();
-        int VIN = keyboard.nextInt();
-        keyboard.nextLine();
-        //init new salesContract
-        SalesContract salesContract = new SalesContract(date.toString(),name,email,DealershipFileManager.dealership.getVehicleByVin(VIN).get(0),isFinance);
-        contracts.add(salesContract);
+        String VIN = keyboard.nextLine();
+
+       dataManager.addSalesContractDetails(VIN,name,date,email,isFinance);
+
         init();
     }
 
@@ -269,10 +275,10 @@ public class UserInterface {
         String email = keyboard.nextLine();
         System.out.println("Please enter the VIN number of the vehicle of interest: ");
         showList();
-        int VIN = keyboard.nextInt();
-        //init new LeaseContract
-        LeaseContract leaseContract = new LeaseContract(date.toString(),name,email,DealershipFileManager.dealership.getVehicleByVin(VIN).get(0));
-        contracts.add(leaseContract);
+        String VIN = keyboard.nextLine();
+        dataManager.addLeaseContractDetails(VIN,name,date,email);
+
+
 
 
         init();
